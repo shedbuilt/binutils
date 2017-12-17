@@ -9,5 +9,5 @@ cd build
              --disable-werror    \
              --with-system-zlib
 # PiLFS says that gold has issues with parallel jobs
-make tooldir=/usr
-make DESTDIR=$SHED_FAKEROOT tooldir=/usr install
+make tooldir=/usr -j 1
+make "DESTDIR=$SHED_FAKEROOT" tooldir=/usr install
