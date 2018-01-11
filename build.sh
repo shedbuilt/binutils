@@ -2,7 +2,7 @@
 mkdir -v build
 cd build
 case "$SHED_BUILDMODE" in
-    bootstrap-pass-1)
+    toolchain-1)
         ../configure --prefix=/tools                  \
                      --with-sysroot=$SHED_INSTALLROOT \
                      --with-lib-path=/tools/lib       \
@@ -12,7 +12,7 @@ case "$SHED_BUILDMODE" in
         make -j 1 || return 1
         make DESTDIR="$SHED_FAKEROOT" install || return 1
     ;;
-    bootstrap-pass-2)
+    toolchain-2)
         CC=$SHED_TARGET-gcc                     \
         AR=$SHED_TARGET-ar                      \
         RANLIB=$SHED_TARGET-ranlib              \
@@ -23,9 +23,9 @@ case "$SHED_BUILDMODE" in
                      --with-sysroot || return 1
         make -j 1 || return 1
         make DESTDIR="$SHED_FAKEROOT" install || return 1
-        make -C ld clean
-        make -C ld LIB_PATH=/usr/lib:/lib
-        cp -v ld/ld-new /tools/bin
+        make -C ld clean || return 1
+        make -C ld LIB_PATH=/usr/lib:/lib || return 1
+        cp -v ld/ld-new /tools/bin || return 1
     ;;
     *)
         ../configure --prefix=/usr       \

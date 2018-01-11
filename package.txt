@@ -1,5 +1,5 @@
 NAME=binutils
 VERSION=2.29.1
-REVISION=3
+REVISION=4
 SRC=http://ftp.gnu.org/gnu/binutils/binutils-2.29.1.tar.bz2
 SRCMD5=9af59a2ca3488823e453bb356fe0f113
