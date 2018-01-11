@@ -2,30 +2,31 @@
 mkdir -v build
 cd build
 case "$SHED_BUILDMODE" in
-    toolchain-1)
-        ../configure --prefix=/tools                  \
-                     --with-sysroot=$SHED_INSTALLROOT \
-                     --with-lib-path=/tools/lib       \
-                     --target=$SHED_TARGET            \
-                     --disable-nls                    \
-                     --disable-werror || return 1
-        make -j 1 || return 1
-        make DESTDIR="$SHED_FAKEROOT" install || return 1
-    ;;
-    toolchain-2)
-        CC=$SHED_TARGET-gcc                     \
-        AR=$SHED_TARGET-ar                      \
-        RANLIB=$SHED_TARGET-ranlib              \
-        ../configure --prefix=/tools            \
-                     --disable-nls              \
-                     --disable-werror           \
-                     --with-lib-path=/tools/lib \
-                     --with-sysroot || return 1
-        make -j 1 || return 1
-        make DESTDIR="$SHED_FAKEROOT" install || return 1
-        make -C ld clean || return 1
-        make -C ld LIB_PATH=/usr/lib:/lib || return 1
-        cp -v ld/ld-new /tools/bin || return 1
+    toolchain)
+        if [ ! -d /tools/${SHED_TARGET} ]; then
+            ../configure --prefix=/tools                  \
+                         --with-sysroot=$SHED_INSTALLROOT \
+                         --with-lib-path=/tools/lib       \
+                         --target=$SHED_TARGET            \
+                         --disable-nls                    \
+                         --disable-werror || return 1
+            make -j 1 || return 1
+            make DESTDIR="$SHED_FAKEROOT" install || return 1
+        else
+            CC=$SHED_TARGET-gcc                     \
+            AR=$SHED_TARGET-ar                      \
+            RANLIB=$SHED_TARGET-ranlib              \
+            ../configure --prefix=/tools            \
+                         --disable-nls              \
+                         --disable-werror           \
+                         --with-lib-path=/tools/lib \
+                         --with-sysroot || return 1
+            make -j 1 || return 1
+            make DESTDIR="$SHED_FAKEROOT" install || return 1
+            make -C ld clean || return 1
+            make -C ld LIB_PATH=/usr/lib:/lib || return 1
+            cp -v ld/ld-new /tools/bin || return 1
+        fi
     ;;
     *)
         ../configure --prefix=/usr       \
