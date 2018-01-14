@@ -3,7 +3,7 @@ mkdir -v build
 cd build
 case "$SHED_BUILDMODE" in
     toolchain)
-        if [ ! -d /tools/${SHED_TARGET} ]; then
+        if [ "$SHED_TARGET" == "$SHED_TOOLCHAIN_TARGET" ]; then
             ../configure --prefix=/tools                  \
                          --with-sysroot=$SHED_INSTALLROOT \
                          --with-lib-path=/tools/lib       \
@@ -13,9 +13,9 @@ case "$SHED_BUILDMODE" in
             make -j 1 || return 1
             make DESTDIR="$SHED_FAKEROOT" install || return 1
         else
-            CC=$SHED_TARGET-gcc                     \
-            AR=$SHED_TARGET-ar                      \
-            RANLIB=$SHED_TARGET-ranlib              \
+            CC=${SHED_TOOLCHAIN_TARGET}-gcc                     \
+            AR=${SHED_TOOLCHAIN_TARGET}-ar                      \
+            RANLIB=${SHED_TOOLCHAIN_TARGET}-ranlib              \
             ../configure --prefix=/tools            \
                          --disable-nls              \
                          --disable-werror           \
