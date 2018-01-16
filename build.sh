@@ -9,23 +9,23 @@ case "$SHED_BUILDMODE" in
                          --with-lib-path=/tools/lib       \
                          --target=$SHED_TARGET            \
                          --disable-nls                    \
-                         --disable-werror || return 1
-            make -j 1 || return 1
-            make DESTDIR="$SHED_FAKEROOT" install || return 1
+                         --disable-werror || exit 1
+            make -j 1 || exit 1
+            make DESTDIR="$SHED_FAKEROOT" install || exit 1
         else
-            CC=${SHED_TOOLCHAIN_TARGET}-gcc                     \
-            AR=${SHED_TOOLCHAIN_TARGET}-ar                      \
-            RANLIB=${SHED_TOOLCHAIN_TARGET}-ranlib              \
+            CC=${SHED_TOOLCHAIN_TARGET}-gcc         \
+            AR=${SHED_TOOLCHAIN_TARGET}-ar          \
+            RANLIB=${SHED_TOOLCHAIN_TARGET}-ranlib  \
             ../configure --prefix=/tools            \
                          --disable-nls              \
                          --disable-werror           \
                          --with-lib-path=/tools/lib \
-                         --with-sysroot || return 1
-            make -j 1 || return 1
-            make DESTDIR="$SHED_FAKEROOT" install || return 1
-            make -C ld clean || return 1
-            make -C ld LIB_PATH=/usr/lib:/lib || return 1
-            cp -v ld/ld-new /tools/bin || return 1
+                         --with-sysroot || exit 1
+            make -j 1 || exit 1
+            make DESTDIR="$SHED_FAKEROOT" install || exit 1
+            make -C ld clean || exit 1
+            make -C ld LIB_PATH=/usr/lib:/lib || exit 1
+            cp -v ld/ld-new /tools/bin || exit 1
         fi
     ;;
     *)
@@ -35,9 +35,9 @@ case "$SHED_BUILDMODE" in
                      --enable-plugins    \
                      --enable-shared     \
                      --disable-werror    \
-                     --with-system-zlib || return 1
+                     --with-system-zlib || exit 1
         # PiLFS says that gold has issues with parallel jobs
-        make tooldir=/usr -j 1 || return 1
-        make DESTDIR="$SHED_FAKEROOT" tooldir=/usr install || return 1
+        make tooldir=/usr -j 1 || exit 1
+        make DESTDIR="$SHED_FAKEROOT" tooldir=/usr install || exit 1
     ;;
 esac
