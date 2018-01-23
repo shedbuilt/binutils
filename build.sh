@@ -25,6 +25,10 @@ case "$SHED_BUILDMODE" in
                          --disable-nls                    \
                          --disable-werror || exit 1
             make -j 1 || exit 1
+            if [[ $SHED_TOOLCHAIN_TARGET =~ ^aarch64-.* ]]; then
+                mkdir -v "${SHED_FAKEROOT}/tools/lib"
+                ln -sv lib "${SHED_FAKEROOT}/tools/lib64"
+            fi
             make DESTDIR="$SHED_FAKEROOT" install || exit 1
         else
             echo "Unsupported configuration for toolchain build"
