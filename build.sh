@@ -11,11 +11,11 @@ case "$SHED_BUILD_MODE" in
                          --disable-nls              \
                          --disable-werror           \
                          --with-lib-path=/tools/lib \
-                         --with-sysroot || exit 1
-            make -j 1 || exit 1
-            make DESTDIR="$SHED_FAKE_ROOT" install || exit 1
-            make -C ld clean || exit 1
-            make -C ld LIB_PATH=/usr/lib:/lib || exit 1
+                         --with-sysroot &&
+            make -j $SHED_NUM_JOBS &&
+            make DESTDIR="$SHED_FAKE_ROOT" install &&
+            make -C ld clean &&
+            make -C ld LIB_PATH=/usr/lib:/lib &&
             cp -v ld/ld-new /tools/bin || exit 1
         elif [ "$SHED_BUILD_TARGET" == 'toolchain' ]; then
             ../configure --prefix=/tools                  \
@@ -23,11 +23,11 @@ case "$SHED_BUILD_MODE" in
                          --with-lib-path=/tools/lib       \
                          --target=$SHED_TOOLCHAIN_TARGET  \
                          --disable-nls                    \
-                         --disable-werror || exit 1
-            make -j 1 || exit 1
+                         --disable-werror &&
+            make -j $SHED_NUM_JOBS || exit 1
             if [[ $SHED_TOOLCHAIN_TARGET =~ ^aarch64-.* ]]; then
-                mkdir -v "${SHED_FAKE_ROOT}/tools/lib"
-                ln -sv lib "${SHED_FAKE_ROOT}/tools/lib64"
+                mkdir -v "${SHED_FAKE_ROOT}/tools/lib" &&
+                ln -sv lib "${SHED_FAKE_ROOT}/tools/lib64" || exit 1
             fi
             make DESTDIR="$SHED_FAKE_ROOT" install || exit 1
         else
@@ -42,9 +42,8 @@ case "$SHED_BUILD_MODE" in
                      --enable-plugins    \
                      --enable-shared     \
                      --disable-werror    \
-                     --with-system-zlib || exit 1
-        # PiLFS says that gold has issues with parallel jobs
-        make tooldir=/usr -j 1 || exit 1
+                     --with-system-zlib &&
+        make tooldir=/usr -j $SHED_NUM_JOBS &&
         make DESTDIR="$SHED_FAKE_ROOT" tooldir=/usr install || exit 1
     ;;
 esac
