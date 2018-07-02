@@ -26,7 +26,7 @@ if [ -n "${SHED_PKG_LOCAL_OPTIONS[toolchain]}" ]; then
                      --disable-werror &&
         make -j $SHED_NUM_JOBS || exit 1
         if [[ $SHED_BUILD_TARGET =~ ^aarch64-.* ]]; then
-            mkdir -v "${SHED_FAKE_ROOT}/tools/lib" &&
+            mkdir -pv "${SHED_FAKE_ROOT}/tools/lib" &&
             ln -sv lib "${SHED_FAKE_ROOT}/tools/lib64" || exit 1
         fi
         make DESTDIR="$SHED_FAKE_ROOT" install
