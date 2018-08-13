@@ -19,7 +19,7 @@ if [ -n "${SHED_PKG_LOCAL_OPTIONS[toolchain]}" ]; then
         cp -v ld/ld-new /tools/bin || exit 1
     elif [ "$SHED_BUILD_TARGET" != "$SHED_NATIVE_TARGET" ]; then
         ../configure --prefix=/tools                   \
-                     --with-sysroot=$SHED_INSTALL_ROOT \
+                     --with-sysroot="$SHED_INSTALL_ROOT" \
                      --with-lib-path=/tools/lib        \
                      --target=$SHED_BUILD_TARGET       \
                      --disable-nls                     \
