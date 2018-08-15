@@ -1,7 +1,7 @@
 NAME=binutils
 VERSION=2.31.1
 REVISION=2
-SRC=http://ftp.gnu.org/gnu/binutils/binutils-2.31.1.tar.xz
+SRC=http://mirrors.kernel.org/gnu/binutils/binutils-2.31.1.tar.xz
 SRCMD5=5b7c9d4ce96f507d95c1b9a255e52418
 OPTIONS=toolchain|bootstrap|release
 DEFAULTS=release
