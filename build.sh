@@ -1,5 +1,8 @@
 #!/bin/bash
 declare -A SHED_PKG_LOCAL_OPTIONS=${SHED_PKG_OPTIONS_ASSOC}
+# Patch
+patch -Np1 -i "${SHED_PKG_PATCH_DIR}/binutils-2.31.1-commonpagesize.patch" || exit 1
+# Configure, Build and Install
 mkdir -v build
 cd build
 if [ -n "${SHED_PKG_LOCAL_OPTIONS[toolchain]}" ]; then
